@@ -18,6 +18,7 @@ from tkinter.ttk import Frame, Button, Entry, Label, Style
 #   },
 # ]
 addressbook = []
+i = 0
 
 
 def save_data():
@@ -40,9 +41,59 @@ def save_data():
 
 
 def show_records():
+    global txt_showname
+    global txt_showlastname
+    global txt_showorganization
+    global txt_showhomephone
+    global txt_showcellphone
+    global txt_showworkphone
+    global txt_show_personal_email
+    global txt_show_work_email
+    global lbl_name
+    global lbl_lastname
+    global lbl_organization
+    global lbl_homephone
+    global lbl_cellphone
+    global lbl_workphone
+    global lbl_personal_email
+    global lbl_work_email
+    lbl_name.configure(text=f'{txt_showname.get()+addressbook[i]["name"]}')
+    lbl_lastname.configure(
+        text=f'{txt_showlastname.get()+addressbook[i]["lastname"]}')
+    lbl_organization.configure(
+        text=f'{txt_showorganization.get()+addressbook[i]["organization"]}')
+    lbl_homephone.configure(
+        text=f'{txt_showhomephone.get()+addressbook[i]["phones"]["home"]}')
+    lbl_cellphone.configure(
+        text=f'{txt_showcellphone.get()+addressbook[i]["phones"]["cell"]}')
+    lbl_workphone.configure(
+        text=f'{txt_showworkphone.get()+addressbook[i]["phones"]["work"]}')
+    lbl_personal_email.configure(
+        text=f'{txt_show_personal_email.get()+addressbook[i]["emails"]["personal"]}')
+    lbl_work_email.configure(
+        text=f'{txt_show_work_email.get()+addressbook[i]["emails"]["work"]}')
 
 
 def open_new_window():
+    global txt_showname
+    global txt_showlastname
+    global txt_showorganization
+    global txt_showhomephone
+    global txt_showcellphone
+    global txt_showworkphone
+    global txt_show_personal_email
+    global txt_show_work_email
+    global lbl_name
+    global lbl_lastname
+    global lbl_organization
+    global lbl_homephone
+    global lbl_cellphone
+    global lbl_workphone
+    global lbl_personal_email
+    global lbl_work_email
+    global newWindow
+    global btn_back
+    global btn_forward
     save_data()
     # print(addressbook)
     newWindow = Toplevel(root)
@@ -73,25 +124,25 @@ def open_new_window():
     Label(frm_phones, text='Teléfonos').pack(side=LEFT, expand=1, fill=X)
     frm_phones.pack(fill=X)
 
-    frm_phonehome = Frame(newWindow)
+    frm_homephone = Frame(newWindow)
     txt_showhomephone = StringVar()
     txt_showhomephone.set('Casa: ')
     lbl_homephone = Label(frm_homephone, text=txt_showhomephone.get())
     lbl_homephone.pack(side=LEFT, expand=1, fill=X)
-    frm_phonehome.pack(fill=X)
+    frm_homephone.pack(fill=X)
 
     frm_cellphone = Frame(newWindow)
     txt_showcellphone = StringVar()
     txt_showcellphone.set('Celular: ')
-    Label(frm_cellphone, text=txt_showcellphone.get()).pack(
-        side=LEFT, expand=1, fill=X)
+    lbl_cellphone = Label(frm_cellphone, text=txt_showcellphone.get())
+    lbl_cellphone.pack(side=LEFT, expand=1, fill=X)
     frm_cellphone.pack(fill=X)
 
     frm_workphone = Frame(newWindow)
     txt_showworkphone = StringVar()
     txt_showworkphone.set('Laboral: ')
-    Label(frm_workphone, text=txt_showworkphone.get()).pack(
-        side=LEFT, expand=1, fill=X)
+    lbl_workphone = Label(frm_workphone, text=txt_showworkphone.get())
+    lbl_workphone.pack(side=LEFT, expand=1, fill=X)
     frm_workphone.pack(fill=X)
 
     frm_emails = Frame(newWindow)
@@ -102,38 +153,75 @@ def open_new_window():
     frm_personal_email = Frame(newWindow)
     txt_show_personal_email = StringVar()
     txt_show_personal_email.set('Personal: ')
-    Label(frm_personal_email, text=txt_show_personal_email.get()).pack(
-        side=LEFT, expand=1, fill=X)
+    lbl_personal_email = Label(
+        frm_personal_email, text=txt_show_personal_email.get())
+    lbl_personal_email.pack(side=LEFT, expand=1, fill=X)
     frm_personal_email.pack(fill=X)
 
     frm_work_email = Frame(newWindow)
     txt_show_work_email = StringVar()
     txt_show_work_email.set('Laboral: ')
-    Label(frm_work_email, text=txt_show_work_email.get()).pack(
-        side=LEFT, expand=1, fill=X)
+    lbl_work_email = Label(frm_work_email, text=txt_show_work_email.get())
+    lbl_work_email.pack(side=LEFT, expand=1, fill=X)
     frm_work_email.pack(fill=X)
 
     show_records()
 
     frm_navigation_buttons = Frame(newWindow)
-    Button(frm_navigation_buttons, text='<',
-           command=move_backward).pack(side=LEFT)
-    Button(frm_navigation_buttons, text='>',
-           command=move_forward).pack(side=LEFT)
+    btn_back = Button(frm_navigation_buttons,
+                      text='<', command=move_backward)
+    if i != 0:
+        btn_back.pack(side=LEFT)
+    else:
+        btn_back.pack_forget()
+
+    btn_forward = Button(frm_navigation_buttons,
+                         text='>', command=move_forward)
+    if i < len(addressbook)-1:
+        btn_forward.pack(side=LEFT)
+    else:
+        btn_forward.pack_forget()
+
     frm_navigation_buttons.pack()
 
     frm_back_button = Frame(newWindow)
     Button(frm_back_button, text='Regresar...',
-           command=newWindow.destroy).pack()
+           command=close_window).pack()
     frm_back_button.pack(fill=X)
 
 
+def close_window():
+    global newWindow
+    global i
+    i = 0
+    newWindow.destroy()
+
+
 def move_backward():
-    print('Pa\'tras!')
+    global i
+    global btn_back
+    global btn_forward
+    if i != 0:
+        print('Pa\'tras!')
+        i -= 1
+        show_records()
+        if i != len(addressbook)-1:
+            btn_forward.pack()
+    else:
+        btn_back.pack_forget()
 
 
 def move_forward():
-    print('Pa\'delante')
+    global i
+    global btn_back
+    global btn_forward
+    if i < len(addressbook)-1:
+        print('Pa\'delante')
+        i += 1
+        show_records()
+        btn_back.pack(before=btn_forward, side=LEFT)
+    else:
+        btn_forward.pack_forget()
 
 
 root = Tk()
