@@ -1,4 +1,4 @@
-from tkinter import Tk, LEFT, RIGHT, TOP, BOTTOM, X, N, W, E, S, NW, StringVar, Toplevel
+from tkinter import Tk, LEFT, RIGHT, TOP, BOTTOM, X, N, W, E, S, NW, StringVar, Toplevel, END
 from tkinter.ttk import Frame, Button, Entry, Label, Style
 
 # addressbook = [
@@ -41,56 +41,68 @@ def save_data():
 
 
 def show_records():
-    global txt_showname
-    global txt_showlastname
-    global txt_showorganization
-    global txt_showhomephone
-    global txt_showcellphone
-    global txt_showworkphone
-    global txt_show_personal_email
-    global txt_show_work_email
-    global lbl_name
-    global lbl_lastname
-    global lbl_organization
-    global lbl_homephone
-    global lbl_cellphone
-    global lbl_workphone
-    global lbl_personal_email
-    global lbl_work_email
-    lbl_name.configure(text=f'{txt_showname.get()+addressbook[i]["name"]}')
-    lbl_lastname.configure(
-        text=f'{txt_showlastname.get()+addressbook[i]["lastname"]}')
-    lbl_organization.configure(
-        text=f'{txt_showorganization.get()+addressbook[i]["organization"]}')
-    lbl_homephone.configure(
-        text=f'{txt_showhomephone.get()+addressbook[i]["phones"]["home"]}')
-    lbl_cellphone.configure(
-        text=f'{txt_showcellphone.get()+addressbook[i]["phones"]["cell"]}')
-    lbl_workphone.configure(
-        text=f'{txt_showworkphone.get()+addressbook[i]["phones"]["work"]}')
-    lbl_personal_email.configure(
-        text=f'{txt_show_personal_email.get()+addressbook[i]["emails"]["personal"]}')
-    lbl_work_email.configure(
-        text=f'{txt_show_work_email.get()+addressbook[i]["emails"]["work"]}')
+    global i
+    global e_name
+    global e_lastname
+    global e_organization
+    global e_homephone
+    global e_cellphone
+    global e_workphone
+    global e_personal_email
+    global e_work_email
+
+    e_name.state(['!readonly'])
+    e_name.delete(0, END)
+    e_name.insert(0, addressbook[i]["name"])
+    e_name.state(['readonly'])
+    # Hla
+    # e_lastname.isert(1,'o')
+    # Hola
+    e_lastname.state(['!readonly'])
+    e_lastname.delete(0, END)
+    e_lastname.insert(0, addressbook[i]["lastname"])
+    e_lastname.state(["readonly"])
+
+    e_organization.state(['!readonly'])
+    e_organization.delete(0, END)
+    e_organization.insert(0, addressbook[i]["organization"])
+    e_organization.state(["readonly"])
+
+    e_homephone.state(['!readonly'])
+    e_homephone.delete(0, END)
+    e_homephone.insert(0, addressbook[i]["phones"]["home"])
+    e_homephone.state(["readonly"])
+
+    e_cellphone.state(['!readonly'])
+    e_cellphone.delete(0, END)
+    e_cellphone.insert(0, addressbook[i]["phones"]["cell"])
+    e_cellphone.state(['readonly'])
+
+    e_workphone.state(['!readonly'])
+    e_workphone.delete(0, END)
+    e_workphone.insert(0, addressbook[i]["phones"]["work"])
+    e_workphone.state(['readonly'])
+
+    e_personal_email.state(['!readonly'])
+    e_personal_email.delete(0, END)
+    e_personal_email.insert(0, addressbook[i]["emails"]["personal"])
+    e_personal_email.state(['readonly'])
+
+    e_work_email.state(['!readonly'])
+    e_work_email.delete(0, END)
+    e_work_email.insert(0, addressbook[i]["emails"]["work"])
+    e_work_email.state(['readonly'])
 
 
 def open_new_window():
-    global txt_showname
-    global txt_showlastname
-    global txt_showorganization
-    global txt_showhomephone
-    global txt_showcellphone
-    global txt_showworkphone
-    global txt_show_personal_email
-    global txt_show_work_email
-    global lbl_name
-    global lbl_lastname
-    global lbl_organization
-    global lbl_homephone
-    global lbl_cellphone
-    global lbl_workphone
-    global lbl_personal_email
-    global lbl_work_email
+    global e_name
+    global e_lastname
+    global e_organization
+    global e_homephone
+    global e_workphone
+    global e_cellphone
+    global e_personal_email
+    global e_work_email
     global newWindow
     global btn_back
     global btn_forward
@@ -100,24 +112,25 @@ def open_new_window():
     newWindow.geometry('400x400')
     newWindow.title('Consulta de registros - Agenda v.1.0')
     frm_name = Frame(newWindow)
-    txt_showname = StringVar()
-    txt_showname.set('Nombre: ')
-    lbl_name = Label(frm_name, text=txt_showname.get())
-    lbl_name.pack(side=LEFT, expand=1, fill=X)
+    Label(frm_name, text="Nombre").pack(side=LEFT)
+    e_name = Entry(frm_name)
+    e_name.pack(side=LEFT, fill=X, expand=1)
     frm_name.pack(fill=X)
 
     frm_lastname = Frame(newWindow)
-    txt_showlastname = StringVar()
-    txt_showlastname.set('Apellidos: ')
-    lbl_lastname = Label(frm_lastname, text=txt_showlastname.get())
+    lbl_lastname = Label(frm_lastname, text="Apellidos")
     lbl_lastname.pack(side=LEFT, expand=1, fill=X)
+    e_lastname = Entry(frm_lastname)
+    e_lastname.pack(side=LEFT, fill=X, expand=1)
     frm_lastname.pack(fill=X)
 
     frm_organization = Frame(newWindow)
     txt_showorganization = StringVar()
     txt_showorganization.set('Organización: ')
     lbl_organization = Label(frm_organization, text=txt_showorganization.get())
-    lbl_organization.pack(side=LEFT, expand=1, fill=X)
+    lbl_organization.pack(side=LEFT)
+    e_organization = Entry(frm_organization)
+    e_organization.pack(side=LEFT, fill=X, expand=1)
     frm_organization.pack(fill=X)
 
     frm_phones = Frame(newWindow)
@@ -128,21 +141,27 @@ def open_new_window():
     txt_showhomephone = StringVar()
     txt_showhomephone.set('Casa: ')
     lbl_homephone = Label(frm_homephone, text=txt_showhomephone.get())
-    lbl_homephone.pack(side=LEFT, expand=1, fill=X)
+    lbl_homephone.pack(side=LEFT)
+    e_homephone = Entry(frm_homephone)
+    e_homephone.pack(side=LEFT, fill=X, expand=1)
     frm_homephone.pack(fill=X)
 
     frm_cellphone = Frame(newWindow)
     txt_showcellphone = StringVar()
     txt_showcellphone.set('Celular: ')
     lbl_cellphone = Label(frm_cellphone, text=txt_showcellphone.get())
-    lbl_cellphone.pack(side=LEFT, expand=1, fill=X)
+    lbl_cellphone.pack(side=LEFT)
+    e_cellphone = Entry(frm_cellphone)
+    e_cellphone.pack(side=LEFT, fill=X, expand=1)
     frm_cellphone.pack(fill=X)
 
     frm_workphone = Frame(newWindow)
     txt_showworkphone = StringVar()
     txt_showworkphone.set('Laboral: ')
     lbl_workphone = Label(frm_workphone, text=txt_showworkphone.get())
-    lbl_workphone.pack(side=LEFT, expand=1, fill=X)
+    lbl_workphone.pack(side=LEFT)
+    e_workphone = Entry(frm_workphone)
+    e_workphone.pack(side=LEFT, fill=X, expand=1)
     frm_workphone.pack(fill=X)
 
     frm_emails = Frame(newWindow)
@@ -155,14 +174,18 @@ def open_new_window():
     txt_show_personal_email.set('Personal: ')
     lbl_personal_email = Label(
         frm_personal_email, text=txt_show_personal_email.get())
-    lbl_personal_email.pack(side=LEFT, expand=1, fill=X)
+    lbl_personal_email.pack(side=LEFT)
+    e_personal_email = Entry(frm_personal_email)
+    e_personal_email.pack(side=LEFT, fill=X, expand=1)
     frm_personal_email.pack(fill=X)
 
     frm_work_email = Frame(newWindow)
     txt_show_work_email = StringVar()
     txt_show_work_email.set('Laboral: ')
     lbl_work_email = Label(frm_work_email, text=txt_show_work_email.get())
-    lbl_work_email.pack(side=LEFT, expand=1, fill=X)
+    lbl_work_email.pack(side=LEFT)
+    e_work_email = Entry(frm_work_email)
+    e_work_email.pack(side=LEFT, fill=X, expand=1)
     frm_work_email.pack(fill=X)
 
     show_records()
@@ -205,10 +228,9 @@ def move_backward():
         print('Pa\'tras!')
         i -= 1
         show_records()
-        if i != len(addressbook)-1:
-            btn_forward.pack()
-    else:
-        btn_back.pack_forget()
+        btn_forward.pack()
+        if i == 0:
+            btn_back.pack_forget()
 
 
 def move_forward():
@@ -220,8 +242,8 @@ def move_forward():
         i += 1
         show_records()
         btn_back.pack(before=btn_forward, side=LEFT)
-    else:
-        btn_forward.pack_forget()
+        if i == len(addressbook) - 1:
+            btn_forward.pack_forget()
 
 
 root = Tk()
