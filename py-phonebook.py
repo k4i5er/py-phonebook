@@ -1,6 +1,8 @@
 from tkinter import Tk, LEFT, RIGHT, TOP, BOTTOM, X, N, W, E, S, NW, StringVar, Toplevel, END
 from tkinter.ttk import Frame, Button, Entry, Label, Style
 
+# CRUD = Create, Read, Update, Delete
+
 # addressbook = [
 #   {
 #     'name': 'César',
@@ -40,6 +42,69 @@ def save_data():
     )
 
 
+def save_record():
+    addressbook[i] = {
+        'name': e_name.get(),
+        'lastname': e_lastname.get(),
+        'organization': e_organization.get(),
+        'phones': {
+            'home': e_homephone.get(),
+            'cell': e_cellphone.get(),
+            'work': e_workphone.get()
+        },
+        'emails': {
+            'personal': e_personal_email.get(),
+            'work': e_work_email.get()
+        }
+    }
+    disable_entrys()
+    btn_modify.configure(text='Modificar registro', command=modify_record)
+
+
+def delete_entry_main_window():
+    entry_name.delete(0, END)
+    entry_lastname.delete(0, END)
+    entry_organization.delete(0, END)
+    entry_homephone.delete(0, END)
+    entry_cellphone.delete(0, END)
+    entry_workphone.delete(0, END)
+    entry_personal_email.delete(0, END)
+    entry_work_email.delete(0, END)
+
+
+def delete_entry_second_window():
+    e_name.delete(0, END)
+    e_lastname.delete(0, END)
+    e_organization.delete(0, END)
+    e_cellphone.delete(0, END)
+    e_homephone.delete(0, END)
+    e_workphone.delete(0, END)
+    e_personal_email.delete(0, END)
+    e_work_email.delete(0, END)
+
+
+def enable_entrys():
+    e_name.state(['!readonly'])
+    e_lastname.state(['!readonly'])
+    e_organization.state(['!readonly'])
+    e_cellphone.state(['!readonly'])
+    e_homephone.state(['!readonly'])
+    e_workphone.state(['!readonly'])
+    e_personal_email.state(['!readonly'])
+    e_work_email.state(['!readonly'])
+
+
+def disable_entrys():
+    e_name.state(['readonly'])
+    e_lastname.state(['readonly'])
+    e_organization.state(['readonly'])
+    e_cellphone.state(['readonly'])
+    e_homephone.state(['readonly'])
+    e_workphone.state(['readonly'])
+    e_personal_email.state(['readonly'])
+    e_work_email.state(['readonly'])
+
+
 def show_records():
     global i
     global e_name
@@ -51,47 +116,22 @@ def show_records():
     global e_personal_email
     global e_work_email
 
-    e_name.state(['!readonly'])
-    e_name.delete(0, END)
+    enable_entrys()
+    delete_entry_second_window()
     e_name.insert(0, addressbook[i]["name"])
-    e_name.state(['readonly'])
-    # Hla
-    # e_lastname.isert(1,'o')
-    # Hola
-    e_lastname.state(['!readonly'])
-    e_lastname.delete(0, END)
     e_lastname.insert(0, addressbook[i]["lastname"])
-    e_lastname.state(["readonly"])
-
-    e_organization.state(['!readonly'])
-    e_organization.delete(0, END)
     e_organization.insert(0, addressbook[i]["organization"])
-    e_organization.state(["readonly"])
-
-    e_homephone.state(['!readonly'])
-    e_homephone.delete(0, END)
     e_homephone.insert(0, addressbook[i]["phones"]["home"])
-    e_homephone.state(["readonly"])
-
-    e_cellphone.state(['!readonly'])
-    e_cellphone.delete(0, END)
     e_cellphone.insert(0, addressbook[i]["phones"]["cell"])
-    e_cellphone.state(['readonly'])
-
-    e_workphone.state(['!readonly'])
-    e_workphone.delete(0, END)
     e_workphone.insert(0, addressbook[i]["phones"]["work"])
-    e_workphone.state(['readonly'])
-
-    e_personal_email.state(['!readonly'])
-    e_personal_email.delete(0, END)
     e_personal_email.insert(0, addressbook[i]["emails"]["personal"])
-    e_personal_email.state(['readonly'])
-
-    e_work_email.state(['!readonly'])
-    e_work_email.delete(0, END)
     e_work_email.insert(0, addressbook[i]["emails"]["work"])
-    e_work_email.state(['readonly'])
+    disable_entrys()
+
+
+def modify_record():
+    enable_entrys()
+    btn_modify.configure(text='Guardar registro', command=save_record)
 
 
 def open_new_window():
@@ -106,8 +146,10 @@ def open_new_window():
     global newWindow
     global btn_back
     global btn_forward
+    global btn_modify
+
     save_data()
-    # print(addressbook)
+    delete_entry_main_window()
     newWindow = Toplevel(root)
     newWindow.geometry('400x400')
     newWindow.title('Consulta de registros - Agenda v.1.0')
@@ -208,6 +250,9 @@ def open_new_window():
     frm_navigation_buttons.pack()
 
     frm_back_button = Frame(newWindow)
+    btn_modify = Button(
+        frm_back_button, text='Modificar registro', command=modify_record)
+    btn_modify.pack()
     Button(frm_back_button, text='Regresar...',
            command=close_window).pack()
     frm_back_button.pack(fill=X)
@@ -225,7 +270,6 @@ def move_backward():
     global btn_back
     global btn_forward
     if i != 0:
-        print('Pa\'tras!')
         i -= 1
         show_records()
         btn_forward.pack()
@@ -238,7 +282,6 @@ def move_forward():
     global btn_back
     global btn_forward
     if i < len(addressbook)-1:
-        print('Pa\'delante')
         i += 1
         show_records()
         btn_back.pack(before=btn_forward, side=LEFT)
@@ -256,25 +299,22 @@ myStyle.configure('TLabel', foreground='#0000ff')
 
 frm_name = Frame(root)
 Label(frm_name, text="Nombre", style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_name = StringVar()
-Entry(frm_name, textvariable=entry_name).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_name = Entry(frm_name)
+entry_name.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_name.pack(fill=X, ipady=10)
 
 frm_lastname = Frame(root)
 Label(frm_lastname, text="Apellidos",
       style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_lastname = StringVar()
-Entry(frm_lastname, textvariable=entry_lastname).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_lastname = Entry(frm_lastname)
+entry_lastname.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_lastname.pack(fill=X, ipady=10)
 
 frm_organization = Frame(root)
 Label(frm_organization, text="Organización",
       style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_organization = StringVar()
-Entry(frm_organization, textvariable=entry_organization).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_organization = Entry(frm_organization)
+entry_organization.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_organization.pack(fill=X, ipady=10)
 
 frm_phones = Frame(root)
@@ -283,23 +323,20 @@ frm_phones.pack(fill=X, ipady=10)
 
 frm_homephone = Frame(root)
 Label(frm_homephone, text="Casa", style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_homephone = StringVar()
-Entry(frm_homephone, textvariable=entry_homephone).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_homephone = Entry(frm_homephone)
+entry_homephone.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_homephone.pack(fill=X, ipady=10)
 
 frm_cellphone = Frame(root)
 Label(frm_cellphone, text="Celular", style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_cellphone = StringVar()
-Entry(frm_cellphone, textvariable=entry_cellphone).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_cellphone = Entry(frm_cellphone)
+entry_cellphone.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_cellphone.pack(fill=X, ipady=10)
 
 frm_workphone = Frame(root)
 Label(frm_workphone, text="Laboral", style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_workphone = StringVar()
-Entry(frm_workphone, textvariable=entry_workphone).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_workphone = Entry(frm_workphone)
+entry_workphone.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_workphone.pack(fill=X, ipady=10)
 
 frm_emails = Frame(root)
@@ -309,19 +346,19 @@ frm_emails.pack(fill=X, ipady=10)
 frm_personal_email = Frame(root)
 Label(frm_personal_email, text="Personal",
       style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_personal_email = StringVar()
-Entry(frm_personal_email, textvariable=entry_personal_email).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_personal_email = Entry(frm_personal_email)
+entry_personal_email.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_personal_email.pack(fill=X, ipady=10)
 
 frm_work_email = Frame(root)
 Label(frm_work_email, text="Laboral",
       style='lbl.TLabel').pack(side=LEFT, padx=10)
-entry_work_email = StringVar()
-Entry(frm_work_email, textvariable=entry_work_email).pack(
-    side=LEFT, expand=1, fill=X, padx=10)
+entry_work_email = Entry(frm_work_email)
+entry_work_email.pack(side=LEFT, expand=1, fill=X, padx=10)
 frm_work_email.pack(fill=X, ipady=10)
 
-Button(root, text='Registrar datos', command=open_new_window).pack()
+Button(root, text='Registrar datos',
+       command=open_new_window).pack(side=LEFT, expand=1)
+Button(root, text='Salir', command=root.destroy).pack(side=LEFT, expand=1)
 
 root.mainloop()
