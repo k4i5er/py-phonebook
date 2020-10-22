@@ -43,22 +43,24 @@ def save_data():
 
 
 def save_record():
-    addressbook[i] = {
-        'name': e_name.get(),
-        'lastname': e_lastname.get(),
-        'organization': e_organization.get(),
-        'phones': {
-            'home': e_homephone.get(),
-            'cell': e_cellphone.get(),
-            'work': e_workphone.get()
-        },
-        'emails': {
-            'personal': e_personal_email.get(),
-            'work': e_work_email.get()
+    is_valid = validate_new_window_entrys()
+    if is_valid:
+        addressbook[i] = {
+            'name': e_name.get(),
+            'lastname': e_lastname.get(),
+            'organization': e_organization.get(),
+            'phones': {
+                'home': e_homephone.get(),
+                'cell': e_cellphone.get(),
+                'work': e_workphone.get()
+            },
+            'emails': {
+                'personal': e_personal_email.get(),
+                'work': e_work_email.get()
+            }
         }
-    }
-    disable_entrys()
-    btn_modify.configure(text='Modificar registro', command=modify_record)
+        disable_entrys()
+        btn_modify.configure(text='Modificar registro', command=modify_record)
 
 
 def delete_entry_main_window():
@@ -177,6 +179,36 @@ def validate_entrys():
     return validate
 
 
+def validate_new_window_entrys():
+    validate = True
+
+    if len(e_name.get()) == 0:
+        lbl_name_nw.configure(style='error.TLabel')
+        validate = False
+    else:
+        lbl_name_nw.configure(style='lbl.TLabel')
+
+    if len(e_lastname.get()) == 0:
+        lbl_lastname_nw.configure(style='error.TLabel')
+        validate = False
+    else:
+        lbl_lastname_nw.configure(style='lbl.TLabel')
+
+    if len(e_cellphone.get()) == 0:
+        lbl_cellphone_nw.configure(style='error.TLabel')
+        validate = False
+    else:
+        lbl_cellphone_nw.configure(style='lbl.TLabel')
+
+    if len(e_personal_email.get()) == 0:
+        lbl_personal_email_nw.configure(style='error.TLabel')
+        validate = False
+    else:
+        lbl_personal_email_nw.configure(style='lbl.TLabel')
+
+    return validate
+
+
 def open_new_window():
     is_valid = validate_entrys()
     if is_valid:
@@ -192,91 +224,100 @@ def open_new_window():
         global btn_back
         global btn_forward
         global btn_modify
+        global lbl_name_nw
+        global lbl_lastname_nw
+        global lbl_cellphone_nw
+        global lbl_personal_email_nw
         global i
 
         i = 0
         save_data()
         delete_entry_main_window()
         newWindow = Toplevel(root)
-        newWindow.geometry('400x400')
+        newWindow.geometry('400x450')
         newWindow.title('Consulta de registros - Agenda v.1.0')
         frm_name = Frame(newWindow)
-        Label(frm_name, text="Nombre").pack(side=LEFT)
+        lbl_name_nw = Label(frm_name, text="Nombre", style='lbl.TLabel')
+        lbl_name_nw.pack(side=LEFT)
         e_name = Entry(frm_name)
         e_name.pack(side=LEFT, fill=X, expand=1)
-        frm_name.pack(fill=X)
+        frm_name.pack(fill=X, ipady=10, padx=10)
 
         frm_lastname = Frame(newWindow)
-        lbl_lastname = Label(frm_lastname, text="Apellidos")
-        lbl_lastname.pack(side=LEFT, expand=1, fill=X)
+        lbl_lastname_nw = Label(
+            frm_lastname, text="Apellidos", style='lbl.TLabel')
+        lbl_lastname_nw.pack(side=LEFT)
         e_lastname = Entry(frm_lastname)
         e_lastname.pack(side=LEFT, fill=X, expand=1)
-        frm_lastname.pack(fill=X)
+        frm_lastname.pack(fill=X, ipady=10, padx=10)
 
         frm_organization = Frame(newWindow)
         txt_showorganization = StringVar()
         txt_showorganization.set('Organización: ')
-        lbl_organization = Label(
-            frm_organization, text=txt_showorganization.get())
-        lbl_organization.pack(side=LEFT)
+        Label(frm_organization, text=txt_showorganization.get(),
+              style='lbl.TLabel').pack(side=LEFT)
         e_organization = Entry(frm_organization)
         e_organization.pack(side=LEFT, fill=X, expand=1)
-        frm_organization.pack(fill=X)
+        frm_organization.pack(fill=X, ipady=10, padx=10)
 
         frm_phones = Frame(newWindow)
         Label(frm_phones, text='Teléfonos').pack(side=LEFT, expand=1, fill=X)
-        frm_phones.pack(fill=X)
+        frm_phones.pack(fill=X, ipady=10, padx=10)
 
         frm_homephone = Frame(newWindow)
         txt_showhomephone = StringVar()
         txt_showhomephone.set('Casa: ')
-        lbl_homephone = Label(frm_homephone, text=txt_showhomephone.get())
+        lbl_homephone = Label(
+            frm_homephone, text=txt_showhomephone.get(), style='lbl.TLabel')
         lbl_homephone.pack(side=LEFT)
         e_homephone = Entry(frm_homephone)
         e_homephone.pack(side=LEFT, fill=X, expand=1)
-        frm_homephone.pack(fill=X)
+        frm_homephone.pack(fill=X, ipady=10, padx=10)
 
         frm_cellphone = Frame(newWindow)
         txt_showcellphone = StringVar()
         txt_showcellphone.set('Celular: ')
-        lbl_cellphone = Label(frm_cellphone, text=txt_showcellphone.get())
-        lbl_cellphone.pack(side=LEFT)
+        lbl_cellphone_nw = Label(
+            frm_cellphone, text=txt_showcellphone.get(), style='lbl.TLabel')
+        lbl_cellphone_nw.pack(side=LEFT)
         e_cellphone = Entry(frm_cellphone)
         e_cellphone.pack(side=LEFT, fill=X, expand=1)
-        frm_cellphone.pack(fill=X)
+        frm_cellphone.pack(fill=X, ipady=10, padx=10)
 
         frm_workphone = Frame(newWindow)
         txt_showworkphone = StringVar()
         txt_showworkphone.set('Laboral: ')
-        lbl_workphone = Label(frm_workphone, text=txt_showworkphone.get())
+        lbl_workphone = Label(
+            frm_workphone, text=txt_showworkphone.get(), style='lbl.TLabel')
         lbl_workphone.pack(side=LEFT)
         e_workphone = Entry(frm_workphone)
         e_workphone.pack(side=LEFT, fill=X, expand=1)
-        frm_workphone.pack(fill=X)
+        frm_workphone.pack(fill=X, ipady=10, padx=10)
 
         frm_emails = Frame(newWindow)
         Label(frm_emails, text='Correos electrónicos').pack(
             side=LEFT, expand=1, fill=X)
-        frm_emails.pack(fill=X)
+        frm_emails.pack(fill=X, ipady=10, padx=10)
 
         frm_personal_email = Frame(newWindow)
         txt_show_personal_email = StringVar()
         txt_show_personal_email.set('Personal: ')
-        lbl_personal_email = Label(
-            frm_personal_email, text=txt_show_personal_email.get())
-        lbl_personal_email.pack(side=LEFT)
+        lbl_personal_email_nw = Label(
+            frm_personal_email, text=txt_show_personal_email.get(), style='lbl.TLabel')
+        lbl_personal_email_nw.pack(side=LEFT)
         e_personal_email = Entry(frm_personal_email)
         e_personal_email.pack(side=LEFT, fill=X, expand=1)
-        frm_personal_email.pack(fill=X)
+        frm_personal_email.pack(fill=X, ipady=10, padx=10)
 
         frm_work_email = Frame(newWindow)
         txt_show_work_email = StringVar()
         txt_show_work_email.set('Laboral: ')
-        lbl_work_email = Label(frm_work_email, text=txt_show_work_email.get())
+        lbl_work_email = Label(
+            frm_work_email, text=txt_show_work_email.get(), style='lbl.TLabel')
         lbl_work_email.pack(side=LEFT)
         e_work_email = Entry(frm_work_email)
         e_work_email.pack(side=LEFT, fill=X, expand=1)
-        frm_work_email.pack(fill=X)
+        frm_work_email.pack(fill=X, ipady=10, padx=10)
 
         show_records()
 
@@ -295,7 +336,7 @@ def open_new_window():
         else:
             btn_forward.pack_forget()
 
-        frm_navigation_buttons.pack()
+        frm_navigation_buttons.pack(fill=X, ipady=10)
 
         frm_back_button = Frame(newWindow)
         btn_modify = Button(
@@ -306,7 +347,7 @@ def open_new_window():
         btn_delete.pack(side=LEFT, expand=1)
         Button(frm_back_button, text='Regresar...',
                command=newWindow.destroy).pack(side=LEFT, expand=1)
-        frm_back_button.pack(fill=X)
+        frm_back_button.pack(fill=X, ipady=10)
 
 
 def move_backward():
